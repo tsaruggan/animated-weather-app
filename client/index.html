@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+
+    <div class="content">
+
+        <div class="main">
+            <p id="temperature"> </p>
+            <p id="condition"> </p>
+            <p id="location"> </p>
+        </div>
+
+
+        <input id="search" type="text" name="search" placeholder="Enter your city, town, etc." autocomplete="off" />
+        <div class="container">
+          
+            <div id="autocomplete"></div>
+        </div>
+
+
+
+        <table class="details">
+            <tr>
+                <td class="label">feels like:</td>
+                <td id="feelsLike" class="value"></td>
+            </tr>
+            <tr>
+                <td class="label">daytime high:</td>
+                <td id="daytimeHigh" class="value"></td>
+            </tr>
+            <tr>
+                <td class="label">daytime low:</td>
+                <td id="daytimeLow" class="value"></td>
+            </tr>
+            <tr>
+                <td class="label">humidity:</td>
+                <td id="humidity" class="value"></td>
+            </tr>
+            <tr>
+                <td class="label">wind:</td>
+                <td id="wind" class="value"></td>
+            </tr>
+            <tr>
+                <td class="label">pressure:</td>
+                <td id="pressure" class="value"></td>
+            </tr>
+            <tr>
+                <td class="label">clouds:</td>
+                <td id="clouds" class="value"></td>
+            </tr>
+            <tr>
+                <td class="label">UV index:</td>
+                <td id="uvIndex" class="value"></td>
+            </tr>
+            <tr>
+                <td class="label">precipitation:</td>
+                <td id="precipitation" class="value"></td>
+            </tr>
+
+        </table>
+    </div>
+
+    <script src="p5.js"></script>
+    <script src="sketch.js"></script>
+
+</body>
+
+</html>
