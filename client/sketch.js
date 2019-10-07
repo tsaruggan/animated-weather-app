@@ -86,12 +86,17 @@ async function initializeComponents() {
 
     await loadPlacesJSON(); //load places JSON file before displaying
 
-    if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition((geo) => {
-            let position = getPosition(geo.coords.latitude.toFixed(1), geo.coords.longitude.toFixed(1)); //get position based on latitude and longitude
-            updateData(position); //update data so it can be dispalyed
-        });
-    }
+    // if ('geolocation' in navigator) {
+    //     navigator.geolocation.getCurrentPosition((geo) => {
+    //         let position = getPosition(geo.coords.latitude.toFixed(1), geo.coords.longitude.toFixed(1)); //get position based on latitude and longitude
+    //         console.log(geo.coords.latitude.toFixed(1),geo.coords.longitude.toFixed(1));
+    //          updateData(position); //update data so it can be dispalyed
+    //     });
+    // }
+
+    let position = getPosition(43.7, -79.4);
+    await updateData(position); //update data so it can be dispalyed
+    console.log(position);
 }
 
 function toggleVisibility(visible) { //turns on or off the display 
