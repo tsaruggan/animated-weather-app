@@ -12,6 +12,7 @@ var clouds;
 var precipitation;
 
 function setup() {
+
     canvas = createCanvas(windowWidth, windowHeight, WEBGL); //initialize canvas at window size with WEBGL
 }
 

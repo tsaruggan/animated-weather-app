@@ -13,19 +13,22 @@ var ready = false; //confirms that data is ready to display
 var changed = false;
 
 var cloud_models = [];
-var cloud_texture;
 
-
+setInterval(() => {
+    if (ready) {
+        document.getElementById("preloader").style.display = "none";
+        clearInterval();
+    }
+}, 1);
 
 async function preload() {
     await loadPlacesJSON(); //load places JSON file before displaying
 
     loadCloudModels(4);
-    cloud_texture = loadImage('cloud-texture.jpg')
 
     let position = getPosition(43.700, -79.416); //starting position
     await updateData(position); //update data so it can be dispalyed
-    console.log(position);
+
 }
 
 function loadCloudModels(count) {
@@ -125,11 +128,11 @@ function getPosition(latitude, longitude) {
 
 function toggleVisibility(visible) { //turns on or off the display 
     if (visible === true) {
-        document.body.style.display = 'block';
-        ready = false;
+        //document.body.style.display = 'block';
+        document.getElementById("content").style.display = 'block';
     } else if (visible === false) {
-        document.body.style.display = 'none';
-        ready = true;
+        // document.body.style.display = 'none';
+        document.getElementById("content").style.display = 'none';
     }
 }
 

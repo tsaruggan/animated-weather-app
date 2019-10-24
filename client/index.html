@@ -4,9 +4,12 @@
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 
+
 <body>
 
-    <div class="content">
+    <img src="assets/preloader.gif" id="preloader">
+
+    <div id="content">
 
         <div id="main">
             <p id="temperature"> </p>
@@ -17,7 +20,7 @@
 
         <input id="search" type="text" name="search" placeholder="Enter your city, town, etc." autocomplete="off" />
         <div class="container">
-          
+
             <div id="autocomplete"></div>
         </div>
 
@@ -63,11 +66,12 @@
 
         </table>
     </div>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="p5.js"></script>
     <script src="sketch.js"></script>
     <script src="animations.js"></script>
-    
+
+
 
 </body>
 
