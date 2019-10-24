@@ -21,6 +21,7 @@ app.get('/weather/:latitude/:longitude', async (request, response) => {
 async function loadWeather(latitude, longitude) {
     let url = `https://api.darksky.net/forecast/${API_KEY}/${latitude},${longitude}`;
 
+    console.log(url);
     const response = await fetch(url);
     const data = await response.json();
 
@@ -30,7 +31,8 @@ async function loadWeather(latitude, longitude) {
     let daytime_low = fahrenheitToCelsius(data.daily.data[0].temperatureMin);
     let humidity = map(data.currently.humidity, 0, 1, 0, 100).toFixed(0);
     let wind_speed = milesToKilometers(data.currently.windSpeed);
-    let wind_direction = bearingToCompass(data.currently.windBearing);
+    let wind_direction = bearingToCompass(data.currently.windBearing)
+    let wind_bearing = data.currently.windBearing;
     let pressure = data.currently.pressure.toFixed(0);
     let clouds = map(data.currently.cloudCover, 0, 1, 0, 100).toFixed(0);
     let uv_index = data.currently.uvIndex;
@@ -39,13 +41,14 @@ async function loadWeather(latitude, longitude) {
     let precipitation = checkPrecipitation(data.currently);
     let precipitation_intensity = inchesTomillimeters(data.currently.precipIntensity);
     let precipitation_probability = map(data.currently.precipProbability, 0, 1, 0, 100).toFixed(0);
+    let ozone = data.currently.ozone;
 
     let local_time = data.currently.time;
     let sunrise = data.daily.data[0].sunriseTime;
     let sunset = data.daily.data[0].sunsetTime;
 
     return {
-        weather: { temperature, apparent_temperature, daytime_high, daytime_low, humidity, wind_speed, wind_direction, pressure, clouds, uv_index, visiblity, description, precipitation, precipitation_intensity, precipitation_probability },
+        weather: { temperature, apparent_temperature, daytime_high, daytime_low, humidity, wind_speed, wind_direction,wind_bearing, pressure, clouds, uv_index, visiblity, description, precipitation, precipitation_intensity, precipitation_probability, ozone },
         time: { local_time, sunrise, sunset }
     };
 }
@@ -58,7 +61,7 @@ function fahrenheitToCelsius(temp) { //converts from fahrenheit to celsius and r
 function milesToKilometers(speed) { //convert miles to kilometers
     return (speed * 1.609).toFixed(0);
 }
- 
+
 function inchesTomillimeters(dist) { //convert from inches to mm 
     return (dist * 25.4).toFixed(1);
 }

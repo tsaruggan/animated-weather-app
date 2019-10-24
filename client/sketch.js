@@ -10,30 +10,49 @@ var weather = null; //current weather data object
 var time = null; //current time data object 
 
 var ready = false; //confirms that data is ready to display 
+var changed = false;
+
+var cloud_models = [];
+var cloud_texture;
 
 
-function preload() {
-    initializeComponents();  //load places json and request browser geolocation to update data
+
+async function preload() {
+    await loadPlacesJSON(); //load places JSON file before displaying
+
+    loadCloudModels(4);
+    cloud_texture = loadImage('cloud-texture.jpg')
+
+    let position = getPosition(43.700, -79.416); //starting position
+    await updateData(position); //update data so it can be dispalyed
+    console.log(position);
 }
 
-
-function setup() {
-    createEventListeners(); //create event listeners for the form elements
+function loadCloudModels(count) {
+    for (let i = 1; i <= count; i++) {
+        cloud_models.push(loadModel(`assets/cloud${i}.obj`));
+    }
 }
 
-function draw() {
-    displayWeather(ready); //update page's dom elements with data
-}
+document.addEventListener('DOMContentLoaded', function () {
+    //create event listeners for the form elements
+    search.addEventListener('input', filterSuggestions);
+    search.addEventListener('keypress', preventSubmit);
+    search.addEventListener('focusout', clearSearch);
+    autocomplete.addEventListener('mousedown', selectSuggestion);
+}, false);
 
-//***THIS IS DOM STUFF**************************************** */
+
 async function updateData(position) {
     let data = await getData(position.latitude, position.longitude); //makes a request to server for data from dark sky 
     this.position = position; //stores position object
     this.weather = data.weather; //stores weather object 
     this.time = data.time; //stores time object
+
     //print data to console with random color
     console.log(`%cRESPONSE: ${JSON.stringify({ "Position": position, "Weather": weather, "Time": time }, undefined, 1)}`, `color: ${color(random(150), random(150), random(150))}; font-family: Helvetica; font-size: 11pt; font-weight: bold;`);
     ready = true;
+    changed = true;
 }
 
 async function getData(latitude, longitude) { //makes a get request to server for data from dark sky api 
@@ -46,7 +65,7 @@ function displayWeather(ready) { //update dom elements on screen
     if (ready) {
         document.getElementById("temperature").innerHTML = `${weather.temperature}\xB0C`;
         document.getElementById("condition").innerHTML = weather.description;
-        document.getElementById("location").innerHTML = `${position.name},${position.country}`;
+        document.getElementById("location").innerHTML = `${position.name}, ${position.country}`;
         document.getElementById("feelsLike").innerHTML = `${weather.apparent_temperature}\xB0C`;
         document.getElementById("daytimeHigh").innerHTML = `${weather.daytime_high}\xB0C`;
         document.getElementById("daytimeLow").innerHTML = `${weather.daytime_low}\xB0C`;
@@ -56,7 +75,28 @@ function displayWeather(ready) { //update dom elements on screen
         document.getElementById("clouds").innerHTML = `${weather.clouds}%`;
         document.getElementById("uvIndex").innerHTML = `${weather.uv_index}`;
         document.getElementById("precipitation").innerHTML = `${weather.precipitation_intensity} mm (${weather.precipitation_probability}%)`;
+
+        var temp_color = temperature_color(weather.temperature);
+
+        document.getElementById("temperature").style.color = temp_color;
+        document.getElementById('main').style.textShadow = `0 0 60px ${temp_color}`;
+
         toggleVisibility(true); //make dom visible
+
+    }
+}
+
+function temperature_color(temperature) {
+
+    const white = color(255, 255, 255);
+    var c;
+
+    if (temperature <= 10) {
+        c = map(max(temperature, -20), -20, 10, 100, 255);
+        return lerpColor(color(0, c, c), white, map(c, 100, 255, 0, 1));
+    } else if (temperature > 10) {
+        c = map(min(temperature, 40), 10, 40, 150, 50);
+        return lerpColor(white, color(255, c, 0), map(temperature, 10, 40, 0.5, 1));
     }
 }
 
@@ -70,8 +110,8 @@ function getPosition(latitude, longitude) {
 
     for (var index = 0; index < places.length; index++) {
 
-        let lat = Number(places[index].lat).toFixed(1);
-        let lng = Number(places[index].lng).toFixed(1);
+        let lat = Number(places[index].lat).toFixed(3);
+        let lng = Number(places[index].lng).toFixed(3);
 
         if (lat == latitude && lng == longitude) { // checks each plac object in places.json for matching latitude and longitude
             let name = places[index].name;
@@ -82,22 +122,6 @@ function getPosition(latitude, longitude) {
     return null; //if not found then return null 
 }
 
-async function initializeComponents() {
-
-    await loadPlacesJSON(); //load places JSON file before displaying
-
-    // if ('geolocation' in navigator) {
-    //     navigator.geolocation.getCurrentPosition((geo) => {
-    //         let position = getPosition(geo.coords.latitude.toFixed(1), geo.coords.longitude.toFixed(1)); //get position based on latitude and longitude
-    //         console.log(geo.coords.latitude.toFixed(1),geo.coords.longitude.toFixed(1));
-    //          updateData(position); //update data so it can be dispalyed
-    //     });
-    // }
-
-    let position = getPosition(43.7, -79.4);
-    await updateData(position); //update data so it can be dispalyed
-    console.log(position);
-}
 
 function toggleVisibility(visible) { //turns on or off the display 
     if (visible === true) {
@@ -109,12 +133,6 @@ function toggleVisibility(visible) { //turns on or off the display
     }
 }
 
-function createEventListeners() {
-    search.addEventListener('input', filterSuggestions);
-    search.addEventListener('keypress', preventSubmit);
-    autocomplete.addEventListener('mousedown', selectSuggestion);
-    search.addEventListener('focusout', clearSearch);
-}
 
 function preventSubmit(e) { //prevent form submission when user hits enter
     var key = e.charCode || e.keyCode || 0;
@@ -126,7 +144,6 @@ function preventSubmit(e) { //prevent form submission when user hits enter
 function hideSuggestions() { //when user focuses out of field, hide the autocomplete suggestions
     setTimeout(() => { search.value = ''; }, 100); //the timeout is a bug fix for preventing suggestion selection to be triggered
 }
-
 
 function selectSuggestion(evt) { //select a suggestion from autocomplete dropdown
     let matches = Array.prototype.slice.call(document.querySelectorAll("div")); //creates an array of all autocomplete div elements

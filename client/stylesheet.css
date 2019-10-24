@@ -4,6 +4,7 @@
     transform: translate(-50%, -50%);
     top: 25vh;
     left: 50vw;
+    width: 100%;
 }
 
 body{
@@ -21,22 +22,26 @@ body{
     padding: 0;
     margin: 36px;
     line-height: 0;
+    color: rgb(0, 100, 150);
+    
 }
 
 #condition{
     font-size: 14pt;
     line-height: 0;
+    color: rgba(255, 255, 255, 0.5);
+   
 }
 
 #location{
     font-size: 8pt;
     line-height: 4px;
-    color: #747474;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 input[type="text"]{
     background: none;
-    border: 2px solid #000000;
+    border: 2px solid #dfdfdfb4;
     text-align: center;
     font-family: Arial;
     width: 250px;
@@ -47,6 +52,7 @@ input[type="text"]{
     margin-bottom: 0px;
     transition: 0.25s;
     z-index: 2;
+    color: #FFFFFF;
     
 }
 
@@ -62,10 +68,14 @@ button:hover{
     transition: 2s;
 }
 
+#main{
+    text-shadow: 0 0 60px rgb(0, 100, 100);
+}
+
 .details{
     position: absolute;
     transform: translate(-50%, 0);
-    background-color: #e2e2e2;
+    background-color: rgba(255,255,255,0.1);
     left: 50%;
     padding: 10px;
     width: 250px;
@@ -73,6 +83,7 @@ button:hover{
     line-height: 0.5;
     z-index: 0;
     margin-top: 30px;
+    color: rgba(255, 255, 255, 0.5);
    
 }
 
@@ -105,7 +116,7 @@ button:hover{
     padding: 20px;
     font-size: 10pt;
     text-align: left;
-    border-radius: 24px;
+    
    
     cursor:pointer;
     background-color: rgba(120,120,120,0.1);
@@ -126,6 +137,10 @@ button:hover{
     background: transparent;  /* Optional: just make scrollbar invisible */
 }
 
+#animations {
+ position: absolute;
+ z-index: -1;
+}
 
 
 
